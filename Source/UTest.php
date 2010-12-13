@@ -77,16 +77,16 @@ class UTest {
 
     public static function testOk($message, $line='n/a') {
         self::$passed += 1;
-        echo "[PASS] $message @ line $line\n";
+        echo "[PASS] $line: $message\n";
     }
 
     public static function testFail($message, $line='n/a', $stop=FALSE) {
         self::$failed += 1;
         if ($stop) {
-            die("[FAIL] $message @ line $line: TERMINATING");
+            die("[FAIL] $line: $message [TERMINATING]");
         }
         else {
-            echo "[FAIL] $message @ line $line\n";
+            echo "[FAIL] $line: $message\n";
         }
     }
 
