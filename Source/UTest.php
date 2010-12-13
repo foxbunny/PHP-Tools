@@ -24,19 +24,26 @@
  *      $a = 1;
  *      $b = 2;
  *
- *      UTest\UTest::testCond(
+ *      UTest\UTest::testConds(
  *          'Simple test', __LINE__,
  *          assert($a != $b)
  *      );
  *
  *  Running the aboce code produces:
  *
- *      [PASS] Simple test @ line 6
+ *      [PASS] 6: Simple test
  *      Total tests: 1 Passed: 1 Failed: 0
+ *
+ *  The first item [PASS] means the test passed. Otherwise, you would see 
+ *  [FAIL]. The next item is the line number. In our example, it's on line 6  
+ *  that we've called testConds(). It will not tell you which of the assertions 
+ *  actually failed if you put more than one, though. If you wish a more 
+ *  fine-grained control over your tests, limit the number of asserts in the 
+ *  single testConds() call to a minimum.
  *
  *  Here's an example that tests multiple conditions in a single go:
  *
- *      UTest\UTest::testCond(
+ *      UTest\UTest::testConds(
  *          'More complex', __LINE__,
  *          assert(is_int($a) == TRUE) and
  *          assert(is_int($b) == TRUE) and
@@ -45,10 +52,24 @@
  *
  *  And this would produce:
  *
- *      [PASS] More complex @ line 6
+ *      [PASS] 6: More complex
  *      Total tests: 1 Passed: 1 Failed: 0
  *
- *  And that's about it.
+ *  Before you start calling testConds(), you can also instruct UTest to stop 
+ *  on first failed test. This is done by calling the setBreakOnFail() static 
+ *  method:
+ *
+ *      UTest\UTest::setBreakOnFail();
+ *
+ *  If you wish to prevent this behavior later on, just use the following 
+ *  commands:
+ *
+ *      UTest\UTest::unsetBreakOnFail();
+ *
+ *  In addition to the [FAIL] flag, terminating tests will also be marked as 
+ *  [TERMINATING].
+ *
+ *  And that's about it. Happy testing!
  *
  *  UTest cannot do the following for you: trapping exceptions, mocking, handling 
  *  fixtures, etc. Some of those features may be implemented in future, and 
@@ -74,15 +95,26 @@ class UTest {
 
     public static $passed = 0;
     public static $failed = 0;
+    public static $breakOnFail = FALSE;
 
     public static function testOk($message, $line='n/a') {
         self::$passed += 1;
         echo "[PASS] $line: $message\n";
     }
 
-    public static function testFail($message, $line='n/a', $stop=FALSE) {
+    public static function setBreakOnFail() {
+        self::$breakOnFail = TRUE;
+        echo "Will terminate on failure in all subsequent tests.\n";
+    }
+
+    public static function unsetBreakOnFail() {
+        self::$breakOnFail = FALSE;
+        echo "Will not terminate on failure in all subsequent tests.\n";
+    }
+
+    public static function testFail($message, $line='n/a') {
         self::$failed += 1;
-        if ($stop) {
+        if (self::$breakOnFail) {
             die("[FAIL] $line: $message [TERMINATING]");
         }
         else {
@@ -100,12 +132,12 @@ class UTest {
         return array('passed'=>self::$passed, 'failed'=>self::$failed);
     }
 
-    public static function testConds($msg, $line, $conds, $stop=FALSE) {
+    public static function testConds($msg, $line, $conds) {
         if ($conds) {
             self::testOk($msg, $line);
         }
         else {
-            self::testFailed($msg, $line, $stop);
+            self::testFailed($msg, $line);
         }
     }
 }
