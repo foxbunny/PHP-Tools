@@ -137,7 +137,7 @@ class UTest {
             self::testOk($msg, $line);
         }
         else {
-            self::testFailed($msg, $line);
+            self::testFail($msg, $line);
         }
     }
 }
