@@ -26,7 +26,7 @@
  *
  *      UTest\UTest::testConds(
  *          'Simple test', __LINE__,
- *          assert($a != $b)
+ *          $a != $b
  *      );
  *
  *  Running the aboce code produces:
@@ -38,16 +38,16 @@
  *  [FAIL]. The next item is the line number. In our example, it's on line 6  
  *  that we've called testConds(). It will not tell you which of the assertions 
  *  actually failed if you put more than one, though. If you wish a more 
- *  fine-grained control over your tests, limit the number of asserts in the 
+ *  fine-grained control over your tests, limit the number of conditions in the 
  *  single testConds() call to a minimum.
  *
  *  Here's an example that tests multiple conditions in a single go:
  *
  *      UTest\UTest::testConds(
  *          'More complex', __LINE__,
- *          assert(is_int($a) == TRUE) and
- *          assert(is_int($b) == TRUE) and
- *          assert($a != $b)
+ *          is_int($a) == TRUE and
+ *          is_int($b) == TRUE and
+ *          $a != $b
  *      );
  *
  *  And this would produce:
